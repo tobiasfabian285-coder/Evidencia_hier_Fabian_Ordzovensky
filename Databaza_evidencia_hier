@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <?php
+$conn = mysqli_connect("localhost", "root", "root");
+
+if (!$conn) {
+    die("Pripojenie zlyhalo: " . mysqli_connect_error());
+}
+
+
+mysqli_query($conn, "CREATE DATABASE IF NOT EXISTS evidencia_hier CHARACTER SET utf8mb4 COLLATE utf8mb4_slovak_ci");
+mysqli_select_db($conn, "evidencia_hier");
+
+
+mysqli_query($conn, "CREATE TABLE IF NOT EXISTS categories (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL
+)");
+
+
+$check = mysqli_query($conn, "SELECT id FROM categories LIMIT 1");
+if (mysqli_num_rows($check) == 0) {
+    mysqli_query($conn, "INSERT INTO categories (name) VALUES ('RPG'), ('FPS'), ('Simulator')");
+}
+
+
+mysqli_query($conn, "CREATE TABLE IF NOT EXISTS hry (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nazov VARCHAR(100) NOT NULL,
+    category_id INT,
+    rok_vydania INT,
+    FOREIGN KEY (category_id) REFERENCES categories(id)
+)");
+
+echo "Databáza a tabuľky boli úspešne vytvorené. Teraz môžeš používať index.php.";
+mysqli_close($conn);
+?>
+</body>
+</html>
