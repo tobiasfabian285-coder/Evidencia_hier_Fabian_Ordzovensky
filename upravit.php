@@ -1,9 +1,45 @@
+<?php
+$conn = mysqli_connect("localhost", "root", "root", "evidencia_hier");
+
+if (!$conn) {
+    die("Chyba pripojenia: " . mysqli_connect_error());
+}
+mysqli_set_charset($conn, "utf8mb4");
+
+if (isset($_GET['id'])) {
+    $id = (int)$_GET['id'];
+    $result = mysqli_query($conn, "SELECT * FROM hry WHERE id = $id");
+    $hra = mysqli_fetch_assoc($result);
+
+    if (!$hra) {
+        die("Hra sa nenašla.");
+    }
+} else {
+    die("Nebolo zadané ID hry.");
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upravit_hru'])) {
+    $nazov = mysqli_real_escape_string($conn, $_POST['nazov']);
+    $cat_id = (int)$_POST['category_id'];
+    $rok = (int)$_POST['rok'];
+
+    if (!empty($nazov)) {
+        $sql = "UPDATE hry SET nazov = '$nazov', category_id = $cat_id, rok_vydania = $rok WHERE id = $id";
+        if (mysqli_query($conn, $sql)) {
+            header("Location: Evidencia_hier_Fabian_Ordzovensky.php"); 
+            exit();
+        }
+    }
+}
+
+$categories = mysqli_query($conn, "SELECT * FROM categories");
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>
     <meta charset="UTF-8">
     <title>Upraviť hru</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"> [cite: 27]
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="container mt-5">
 
@@ -12,7 +48,7 @@
             <h3 class="mb-0">Upraviť hru: <?php echo htmlspecialchars($hra['nazov']); ?></h3>
         </div>
         <div class="card-body">
-            [cite_start]<form method="POST"> [cite: 14]
+            <form method="POST">
                 <div class="mb-3">
                     <label class="form-label">Názov hry</label>
                     <input type="text" name="nazov" class="form-control" 
@@ -41,47 +77,6 @@
             </form>
         </div>
     </div>
-
-<body>
-<?php
-
-    $conn = mysqli_connect("localhost", "root", "root", "evidencia_hier"); [cite: 5]
-
-    if (!$conn) {
-        die("Chyba pripojenia: " . mysqli_connect_error());
-    }
-    mysqli_set_charset($conn, "utf8mb4");
-
-
-    if (isset($_GET['id'])) {
-        $id = (int)$_GET['id'];
-        $result = mysqli_query($conn, "SELECT * FROM hry WHERE id = $id");
-        $hra = mysqli_fetch_assoc($result);
-
-        if (!$hra) {
-            die("Hra sa nenašla.");
-        }
-    }
-
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['upravit_hru'])) {
-        $nazov = mysqli_real_escape_string($conn, $_POST['nazov']); [cite: 15, 16]
-        $cat_id = (int)$_POST['category_id'];
-        $rok = (int)$_POST['rok'];
-
-        if (!empty($nazov)) {
-            $sql = "UPDATE hry SET nazov = '$nazov', category_id = $cat_id, rok_vydania = $rok WHERE id = $id";
-            if (mysqli_query($conn, $sql)) {
-                header("Location: Evidencia_hier_Fabian_Ordzovensky.php"); // Návrat na hlavnú stránku
-                exit();
-            }
-        }
-    }
-
-
-$categories = mysqli_query($conn, "SELECT * FROM categories")
-?>
-
 
 </body>
 </html>

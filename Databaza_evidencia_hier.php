@@ -38,7 +38,7 @@ mysqli_query($conn, "CREATE TABLE IF NOT EXISTS hry (
 
 $checkCat = mysqli_query($conn, "SELECT id FROM categories LIMIT 1");
 if (mysqli_num_rows($checkCat) == 0) {
-    mysqli_query($conn, "INSERT INTO categories (name) VALUES ('RPG'), ('FPS'), ('Simulator'), ('Strategy')");
+    mysqli_query($conn, "INSERT INTO categories (name) VALUES ('RPG'), ('FPS'), ('Simulator'), ('Stratégie'), ('Bojové')");
 }
 
 

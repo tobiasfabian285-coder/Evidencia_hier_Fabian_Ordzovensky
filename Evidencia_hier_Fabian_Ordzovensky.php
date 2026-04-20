@@ -1,3 +1,34 @@
+<?php
+$conn = mysqli_connect("localhost", "root", "root", "evidencia_hier");
+
+if (!$conn) {
+    die("Chyba pripojenia k databáze: " . mysqli_connect_error());
+}
+mysqli_set_charset($conn, "utf8mb4");
+
+
+if (isset($_GET['delete'])) {
+    $id = (int)$_GET['delete'];
+    mysqli_query($conn, "DELETE FROM hry WHERE id = $id");
+    header("Location: Evidencia_hier_Fabian_Ordzovensky.php");
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['pridat_hru'])) {
+    $nazov = mysqli_real_escape_string($conn, $_POST['nazov']);  
+    $cat_id = (int)$_POST['category_id'];
+    $rok = (int)$_POST['rok'];
+
+    if (!empty($nazov)) {
+        mysqli_query($conn, "INSERT INTO hry (nazov, category_id, rok_vydania) VALUES ('$nazov', $cat_id, $rok)");
+        header("Location: Evidencia_hier_Fabian_Ordzovensky.php");
+        exit();
+    }
+}
+
+$sql = "SELECT hry.*, categories.name AS kategoria_nazov FROM hry JOIN categories ON hry.category_id = categories.id";
+$result = mysqli_query($conn, $sql);
+?>
 <!DOCTYPE html>
 <html lang="sk">
 <head>
@@ -56,7 +87,7 @@
                 <td>
                     <a href="upravit.php?id=<?php echo $row['id']; ?>" class="btn btn-sm btn-warning">Upraviť</a>
                     
-                    <a href="index.php?delete=<?php echo $row['id']; ?>" 
+                    <a href="Evidencia_hier_Fabian_Ordzovensky.php?delete=<?php echo $row['id']; ?>" 
                        class="btn btn-sm btn-danger" 
                        onclick="return confirm('Naozaj zmazať?')">Zmazať</a>
                 </td>
@@ -64,66 +95,6 @@
             <?php endwhile; ?>
         </tbody>
     </table>
-<?php
-
-$conn = mysqli_connect("localhost", "root", "root", "evidencia_hier");
-
-if (!$conn) {
-    die("Chyba pripojenia k databáze: " . mysqli_connect_error());
-}
-mysqli_set_charset($conn, "utf8mb4");
-
-
-
-
-if (isset($_GET['delete'])) {
-    $id = (int)$_GET['delete'];
-    mysqli_query($conn, "DELETE FROM hry WHERE id = $id");
-    header("Location: index.php");
-    exit();
-}
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['pridat_hru'])) {
-    $nazov = mysqli_real_escape_string($conn, $_POST['nazov']);  
-    $cat_id = (int)$_POST['category_id'];
-    $rok = (int)$_POST['rok'];
-
-    if (!empty($nazov)) {
-        mysqli_query($conn, "INSERT INTO hry (nazov, category_id, rok_vydania) VALUES ('$nazov', $cat_id, $rok)");
-        header("Location: index.php");
-        exit();
-    }
-}
-$conn = mysqli_connect("localhost", "root", "root", "evidencia_hier");
-mysqli_set_charset($conn, "utf8mb4");
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['pridat_hru'])) {
-
-    $nazov = mysqli_real_escape_string($conn, $_POST['nazov']); 
-    $cat_id = (int)$_POST['category_id'];
-    $rok = (int)$_POST['rok'];
-
-    if (!empty($nazov)) {
-        
-        $sql_insert = "INSERT INTO hry (nazov, category_id, rok_vydania) VALUES ('$nazov', $cat_id, $rok)";
-        mysqli_query($conn, $sql_insert);
-        
-        
-        header("Location: index.php");
-        exit();
-    }
-}
-
-
-
-
-$sql = "SELECT hry.*, categories.name AS kategoria_nazov FROM hry JOIN categories ON hry.category_id = categories.id";
-$result = mysqli_query($conn, "SELECT hry.*, categories.name AS kat_nazov FROM hry JOIN categories ON hry.category_id = categories.id")
-?>
-
-
 
 </body>
 </html>
