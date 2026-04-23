@@ -53,7 +53,7 @@ if (mysqli_num_rows($checkHry) == 0) {
 echo "<div class='alert alert-success'>
         <h4>Úspech!</h4>
         <p>Databáza a tabuľky boli úspešne vytvorené a naplnené dátami.</p>
-        <a href='index.php' class='btn btn-primary'>Prejsť na aplikáciu</a>
+        <a href='Evidencia_hier_Fabian_Ordzovensky.php' class='btn btn-primary'>Prejsť na aplikáciu</a>
       </div>";
 
 mysqli_close($conn);
