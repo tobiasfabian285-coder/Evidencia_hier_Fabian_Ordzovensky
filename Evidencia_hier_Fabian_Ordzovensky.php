@@ -70,7 +70,6 @@ $result = mysqli_query($conn, $sql);
     <table class="table table-striped border shadow-sm">
         <thead class="table-dark">
             <tr>
-                <th>ID</th>
                 <th>Názov</th>
                 <th>Kategória</th>
                 <th>Rok vydania</th>
@@ -80,7 +79,6 @@ $result = mysqli_query($conn, $sql);
         <tbody>
             <?php while($row = mysqli_fetch_assoc($result)): ?>
             <tr>
-                <td><?php echo $row['id']; ?></td>
                 <td><?php echo htmlspecialchars($row['nazov']); ?></td>
                 <td><?php echo htmlspecialchars($row['kategoria_nazov']); ?></td>
                 <td><?php echo $row['rok_vydania']; ?></td>
